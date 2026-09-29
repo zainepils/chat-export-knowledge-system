@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ChatGPT Export Viewer</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div>
+            <h1>Chats</h1>
+            <p id="chatCount">Loading archive...</p>
+          </div>
+        </div>
+        <label class="account-switcher">
+          <span>Account</span>
+          <select id="accountSelect"></select>
+        </label>
+        <label class="search-box">
+          <span>Search conversations</span>
+          <input id="searchInput" type="search" placeholder="project plan, customer research..." autocomplete="off" />
+        </label>
+        <label class="title-only-toggle">
+          <input id="titleOnlySearch" type="checkbox" />
+          <span>Only search chat names</span>
+        </label>
+        <label class="title-only-toggle">
+          <input id="semanticSearch" type="checkbox" />
+          <span>Semantic search</span>
+        </label>
+        <div id="conversationList" class="conversation-list"></div>
+        <button id="loadMoreButton" class="load-more" type="button">Load more</button>
+      </aside>
+
+      <main class="chat-pane">
+        <header class="chat-header">
+          <div>
+            <p class="eyebrow">Local Clean Export</p>
+            <h2 id="chatTitle">Select a conversation</h2>
+            <p id="chatMeta">Search or pick a chat from the left.</p>
+          </div>
+          <div class="header-actions">
+            <button id="scrollTopButton" class="icon-button" type="button" title="Jump to top">↑</button>
+            <button id="scrollBottomButton" class="icon-button" type="button" title="Jump to bottom">↓</button>
+            <button id="toggleMetaButton" class="icon-button" type="button" title="Toggle details">Details</button>
+            <button id="copyPathButton" class="icon-button" type="button" title="Copy source paths">Copy paths</button>
+            <button id="binChatButton" class="icon-button danger-soft" type="button" title="Move chat files to viewer bin">Bin</button>
+            <button id="deleteChatButton" class="icon-button danger" type="button" title="Permanently delete chat files">Delete</button>
+          </div>
+        </header>
+
+        <section id="detailsPanel" class="details-panel hidden"></section>
+        <section id="messages" class="messages empty-state">
+          <div class="empty-card">
+            <h3>ChatGPT-style local viewer</h3>
+            <p>Open any cleaned conversation and read it as a proper chat, with Markdown formatting preserved.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div id="imageModal" class="image-modal hidden" role="dialog" aria-modal="true">
+      <button id="closeImageModal" class="modal-close" type="button" title="Close image preview">×</button>
+      <img id="modalImage" alt="" />
+      <p id="modalCaption"></p>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>

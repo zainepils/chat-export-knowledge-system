@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-chat-export-knowledge-system"
+version = "0.1.0"
+description = "Local ChatGPT export archive, search, and viewer"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy==2.5.1",
+  "fastembed==0.8.0",
+]
+
+[project.optional-dependencies]
+macos = [
+  "pywebview==6.2.1; sys_platform == 'darwin'",
+  "pyobjc-framework-WebKit==12.2.1; sys_platform == 'darwin'",
+  "pillow==12.3.0; sys_platform == 'darwin'",
+]
+
+[tool.setuptools]
+py-modules = []
