@@ -18,5 +18,5 @@ codesign --verify --deep --strict "$app"
 
 release="$build_root/ChatGPT-Export-Viewer-0.1.0-macos-arm64.zip"
 ditto -c -k --sequesterRsrc --keepParent "$app" "$release"
-shasum -a 256 "$release" > "$release.sha256"
+(cd "$build_root" && shasum -a 256 "${release:t}" > "${release:t}.sha256")
 print "$release"
