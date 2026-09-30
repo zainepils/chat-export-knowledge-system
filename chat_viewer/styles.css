@@ -98,6 +98,106 @@ input {
   box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.14);
 }
 
+.import-command {
+  margin: 0 18px 14px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.import-command:hover {
+  border-color: var(--accent);
+}
+
+.import-dialog {
+  width: min(440px, calc(100vw - 32px));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.import-dialog::backdrop {
+  background: rgba(15, 18, 22, 0.48);
+}
+
+.import-dialog form {
+  display: grid;
+  gap: 12px;
+}
+
+.import-dialog h2 {
+  margin: 0 0 4px;
+  font-size: 19px;
+}
+
+.import-dialog form > label:not(.import-option) {
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.import-dialog input[type="email"],
+.import-dialog input[type="text"] {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0 10px;
+}
+
+.choose-export {
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
+  cursor: pointer;
+}
+
+.import-file-name,
+.import-status {
+  min-height: 18px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.import-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.import-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.import-actions button {
+  min-width: 82px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  cursor: pointer;
+}
+
+.import-actions button[type="submit"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
 .search-box span {
   display: block;
   margin-bottom: 6px;

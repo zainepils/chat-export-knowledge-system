@@ -76,7 +76,7 @@ def slugify_account(email: str) -> str:
 
 
 def ensure_accounts_config() -> list[dict]:
-    ACCOUNTS_DIR.mkdir(exist_ok=True)
+    ACCOUNTS_DIR.mkdir(parents=True, exist_ok=True)
     if not ACCOUNTS_CONFIG.exists():
         ACCOUNTS_CONFIG.write_text(json.dumps({"active": "", "accounts": []}, indent=2), encoding="utf-8")
         return []

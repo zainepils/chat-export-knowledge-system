@@ -19,6 +19,7 @@
           <span>Account</span>
           <select id="accountSelect"></select>
         </label>
+        <button id="importExportButton" class="import-command" type="button" hidden>Import export</button>
         <label class="search-box">
           <span>Search conversations</span>
           <input id="searchInput" type="search" placeholder="project plan, customer research..." autocomplete="off" />
@@ -66,6 +67,22 @@
       <img id="modalImage" alt="" />
       <p id="modalCaption"></p>
     </div>
+    <dialog id="importDialog" class="import-dialog">
+      <form id="importForm">
+        <h2>Import ChatGPT export</h2>
+        <button id="chooseExportButton" class="choose-export" type="button">Choose ZIP file</button>
+        <p id="chosenExportName" class="import-file-name">No file selected</p>
+        <label>Account email<input id="importEmail" type="email" autocomplete="email" required /></label>
+        <label>Account label<input id="importLabel" type="text" placeholder="Personal" /></label>
+        <label class="import-option"><input id="replaceAccount" type="checkbox" /> Replace an existing account</label>
+        <label class="import-option"><input id="skipSemantic" type="checkbox" /> Skip semantic search</label>
+        <p id="importStatus" class="import-status" role="status"></p>
+        <div class="import-actions">
+          <button id="cancelImportButton" type="button">Cancel</button>
+          <button id="runImportButton" type="submit">Import</button>
+        </div>
+      </form>
+    </dialog>
     <script src="/app.js"></script>
   </body>
 </html>

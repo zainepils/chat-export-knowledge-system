@@ -57,14 +57,20 @@ See `examples/config.example.env` for the supported environment settings; it is 
 CHATGPT_EXPORT_DATA_ROOT=/path/to/private/archive ./.venv/bin/python scripts/serve_chat_viewer.py
 ```
 
-## Native macOS wrapper
+## Native macOS app
+
+An Apple Silicon release ZIP can run without this checkout or a separate Python installation. Extract it, open `ChatGPT Export Viewer.app`, and use **Import export** to choose a ChatGPT export ZIP and account name. Imported data lives in `~/Library/Application Support/ChatGPT Export Viewer/runtime/` by default; it is not stored inside the app. The first semantic-search import needs a model download; tick **Skip semantic search** to import offline.
+
+The release is ad-hoc signed but not notarized. macOS may ask you to approve opening an app downloaded from another machine. This build has been tested on the development Mac, not on a second Mac. See [RELEASE.md](RELEASE.md) for build and verification details.
+
+For a development wrapper tied to this checkout:
 
 ```bash
 ./scripts/create_macos_app.sh
 open 'dist/ChatGPT Export Viewer.app'
 ```
 
-The wrapper embeds the same local viewer and reads the configured data root. It is a local development build that uses this checkout's Python environment. Rebuild it after moving the checkout or changing its Python environment.
+The development wrapper embeds the same local viewer and reads the configured data root. It uses this checkout's Python environment, so rebuild it after moving the checkout or changing its Python environment.
 
 ## Data layout
 

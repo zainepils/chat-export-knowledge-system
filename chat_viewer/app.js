@@ -13,6 +13,7 @@ const state = {
   activeChatId: null,
   activeConversation: null,
   permanentDelete: false,
+  importPath: "",
 };
 
 const els = {
@@ -37,6 +38,18 @@ const els = {
   closeImageModal: document.getElementById("closeImageModal"),
   modalImage: document.getElementById("modalImage"),
   modalCaption: document.getElementById("modalCaption"),
+  importExportButton: document.getElementById("importExportButton"),
+  importDialog: document.getElementById("importDialog"),
+  importForm: document.getElementById("importForm"),
+  chooseExportButton: document.getElementById("chooseExportButton"),
+  chosenExportName: document.getElementById("chosenExportName"),
+  importEmail: document.getElementById("importEmail"),
+  importLabel: document.getElementById("importLabel"),
+  replaceAccount: document.getElementById("replaceAccount"),
+  skipSemantic: document.getElementById("skipSemantic"),
+  importStatus: document.getElementById("importStatus"),
+  runImportButton: document.getElementById("runImportButton"),
+  cancelImportButton: document.getElementById("cancelImportButton"),
 };
 
 function escapeHtml(value) {
@@ -660,6 +673,65 @@ els.copyPathButton.addEventListener("click", async () => {
   setTimeout(() => {
     els.copyPathButton.textContent = "Copy paths";
   }, 900);
+});
+
+function enableNativeImport() {
+  if (window.pywebview?.api?.pick_export) {
+    els.importExportButton.hidden = false;
+  }
+}
+
+window.addEventListener("pywebviewready", enableNativeImport);
+enableNativeImport();
+
+els.importExportButton.addEventListener("click", () => {
+  els.importStatus.textContent = "";
+  els.importDialog.showModal();
+});
+
+els.cancelImportButton.addEventListener("click", () => els.importDialog.close());
+
+els.chooseExportButton.addEventListener("click", async () => {
+  try {
+    const path = await window.pywebview.api.pick_export();
+    if (!path) return;
+    state.importPath = path;
+    els.chosenExportName.textContent = path.split(/[\\/]/).pop();
+  } catch (error) {
+    els.importStatus.textContent = error.message;
+  }
+});
+
+els.importForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!state.importPath) {
+    els.importStatus.textContent = "Choose an export ZIP first.";
+    return;
+  }
+  const email = els.importEmail.value.trim();
+  const label = els.importLabel.value.trim() || email;
+  els.runImportButton.disabled = true;
+  els.cancelImportButton.disabled = true;
+  els.importStatus.textContent = "Importing export. This may take several minutes.";
+  try {
+    const result = await window.pywebview.api.import_export(
+      state.importPath, email, label, els.replaceAccount.checked, els.skipSemantic.checked
+    );
+    await postJson("/api/account", { slug: result.slug });
+    await loadAccounts();
+    state.activeChatId = null;
+    state.activeConversation = null;
+    els.chatTitle.textContent = "Select a conversation";
+    els.chatMeta.textContent = "Search or pick a chat from the left.";
+    els.messages.innerHTML = "";
+    await loadConversations({ reset: true });
+    els.importDialog.close();
+  } catch (error) {
+    els.importStatus.textContent = error.message || String(error);
+  } finally {
+    els.runImportButton.disabled = false;
+    els.cancelImportButton.disabled = false;
+  }
 });
 
 loadAccounts()

@@ -114,6 +114,20 @@ class PublicWorkflowTest(unittest.TestCase):
         self.assertTrue(asset.exists())
         self.assertTrue((account / "raw_export/file_demo123.dat").exists())
 
+    def test_bundled_import_path_uses_in_process_builders(self) -> None:
+        command = (
+            "import sys; sys.path.insert(0, sys.argv[1]); "
+            "import chat_viewer_app; sys.frozen = True; "
+            "result = chat_viewer_app.AppAPI().import_export(sys.argv[2], 'studio@example.invalid', "
+            "'Studio', False, True); print(result['counts']['conversation_json_files'])"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", command, str(REPO / "scripts"), str(self.exports / "studio")],
+            env=self.env, text=True, capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout.strip().splitlines()[-1], "3")
+
     def test_viewer_search_accounts_and_files(self) -> None:
         self.assertEqual(self.import_account("studio").returncode, 0)
         self.assertEqual(self.import_account("workshop").returncode, 0)

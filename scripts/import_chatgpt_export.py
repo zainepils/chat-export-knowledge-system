@@ -15,6 +15,7 @@ This is the one-command wrapper around the older manual workflow:
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import os
 import re
@@ -28,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 
-SOURCE_ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = Path(os.environ.get("CHATGPT_EXPORT_SOURCE_ROOT", Path(__file__).resolve().parents[1]))
 PROJECT_ROOT = Path(os.environ.get("CHATGPT_EXPORT_DATA_ROOT", SOURCE_ROOT / "runtime"))
 SCRIPTS_DIR = SOURCE_ROOT / "scripts"
 REBUILD_SCRIPT = SCRIPTS_DIR / "rebuild_clean_archive.py"
@@ -143,6 +144,14 @@ def choose_python() -> str:
 
 
 def rebuild_archive(raw_root: Path, account_root: Path, python: str) -> None:
+    if getattr(sys, "frozen", False):
+        os.environ["CHATGPT_RAW_EXPORT"] = str(raw_root)
+        os.environ["CHATGPT_CLEAN_ROOT"] = str(account_root)
+        import rebuild_clean_archive
+
+        importlib.reload(rebuild_clean_archive)
+        rebuild_clean_archive.main()
+        return
     env = os.environ.copy()
     env["CHATGPT_RAW_EXPORT"] = str(raw_root)
     env["CHATGPT_CLEAN_ROOT"] = str(account_root)
@@ -150,6 +159,15 @@ def rebuild_archive(raw_root: Path, account_root: Path, python: str) -> None:
 
 
 def build_semantic(account_root: Path, python: str) -> None:
+    if getattr(sys, "frozen", False):
+        os.environ["CHATGPT_CLEAN_ROOT"] = str(account_root)
+        import build_semantic_search
+
+        importlib.reload(build_semantic_search)
+        build_semantic_search.build(
+            build_semantic_search.DEFAULT_MODEL, 32, build_semantic_search.DEFAULT_MAX_BODY_CHARS
+        )
+        return
     env = os.environ.copy()
     env["CHATGPT_CLEAN_ROOT"] = str(account_root)
     run([python, str(SEMANTIC_SCRIPT)], env=env)
@@ -264,8 +282,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main() -> None:
-    args = parse_args()
+def run_import(args: argparse.Namespace) -> dict[str, Any]:
     input_path = args.input.expanduser().resolve()
     if not input_path.exists():
         raise SystemExit(f"Input not found: {input_path}")
@@ -328,20 +345,19 @@ def main() -> None:
     update_account_registry(project_root / "accounts" / "accounts.json", email, label, slug, account_root, status)
 
     counts = read_build_counts(account_root)
-    print(
-        json.dumps(
-            {
-                "status": status,
-                "email": email,
-                "slug": slug,
-                "account_root": str(account_root),
-                "raw_export": str(account_root / "raw_export"),
-                "counts": counts,
-                "import_report": str(account_root / "reports" / "import_report.md"),
-            },
-            indent=2,
-        )
-    )
+    return {
+        "status": status,
+        "email": email,
+        "slug": slug,
+        "account_root": str(account_root),
+        "raw_export": str(account_root / "raw_export"),
+        "counts": counts,
+        "import_report": str(account_root / "reports" / "import_report.md"),
+    }
+
+
+def main() -> None:
+    print(json.dumps(run_import(parse_args()), indent=2))
 
 
 if __name__ == "__main__":
