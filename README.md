@@ -22,6 +22,12 @@ Shared conversation export records are commonly metadata only. Semantic search r
 
 The private agent knowledge workflow is separate from the public viewer. A generic evidence-first template is in `examples/knowledge_template/`; it provides a structure for human-reviewed claims, not automatic personal fact extraction.
 
+## Project development
+
+Zaine Pilsworth initiated the project, defined the problem and desired workflow, made the key product decisions, and directed its requirements, testing, and refinement against real exports.
+
+Codex helped shape implementation details and wrote substantial portions of the code under Zaine's direction. Zaine tested the system, identified issues, and steered changes throughout development. This is an AI-assisted project, not an independently hand-coded build.
+
 ## Install
 
 Python 3.11 or newer is required. On macOS, use the `macos` extra for the native wrapper.
