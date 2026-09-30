@@ -4,6 +4,8 @@ Turn a ChatGPT data export into a local, searchable archive. The importer separa
 
 This repository contains source code and a synthetic example generator. Your exports, attachments, indexes, embeddings, and logs belong in `runtime/`, which is ignored by Git.
 
+**Mac app:** [Download the Apple Silicon release](https://github.com/zainepils/chat-export-knowledge-system/releases/tag/v0.1.0). It runs without a separate Python installation and imports export ZIPs from the app. It is not notarized; see [RELEASE.md](RELEASE.md) before opening it.
+
 ![Synthetic semantic search and conversation view](evidence/demo-search.png)
 
 ## What it does
